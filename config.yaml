@@ -1,0 +1,80 @@
+# ============================================================
+# experiment_config.yaml - Multimodal Sequence Learning Setup
+# Course: Deep Neural Networks and Learning Systems
+# ============================================================
+
+data_config:
+  dataset_id: "daniel3303/StoryReasoning"
+  dataset_name: "StoryReasoningDataset"
+  splits:
+    train: "train"
+    validation: "validation"
+    test: "test"
+  preprocessing:
+    image_resolution: 224
+    max_caption_tokens: 128
+    context_frames: 3
+
+vision_module:
+  encoder_type: "resnet50"
+  use_pretrained_weights: true
+  lock_backbone: false
+  feature_size: 512
+
+language_module:
+  encoder_architecture: "lstm"     # options: lstm | transformer
+  vocabulary_limit: 10000
+  embedding_size: 256
+  rnn_hidden_units: 512
+  rnn_layers: 2
+  dropout_rate: 0.3
+  encoded_output_dim: 512
+
+fusion_module:
+  fusion_method: "cross_modal_attention"   # concat | cross_modal_attention | tensor_fusion
+  fusion_output_size: 512
+
+temporal_module:
+  sequence_architecture: "bilstm"   # lstm | bilstm | gru
+  sequence_hidden_units: 512
+  sequence_layers: 2
+  sequence_dropout: 0.3
+
+attention_module:
+  attention_variant: "temporal_self_attention"   # dot | additive | temporal_self_attention
+  heads: 8
+
+decoders:
+  image_generation:
+    decoder_style: "conv_transpose"
+    channels_out: 3
+    resolution: 224
+
+  text_generation:
+    decoder_type: "lstm"
+    hidden_units: 512
+    layers: 2
+    max_length: 64
+
+training_config:
+  total_epochs: 10
+  batch_sz: 8
+  lr: 1.0e-4
+  l2_regularization: 1.0e-5
+  lr_scheduler: "cosine"
+  warmup_iterations: 500
+  gradient_clipping: 1.0
+  loss_weights:
+    image_loss: 1.0
+    text_loss: 1.0
+  random_seed: 42
+
+explainability_config:
+  technique: "attention_rollout"   # attention_rollout | grad_cam | integrated_gradients
+  samples_to_visualize: 10
+
+storage_paths:
+  dataset_path: "./data"
+  checkpoints_path: "./checkpoints"
+  output_results_path: "./results"
+  logging_path: "./logs"
