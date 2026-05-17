@@ -1,0 +1,5 @@
+Variant,BLEU-4,MSE
+Baseline (LSTM + Concat),0.00,0.900000
++ Cross-Modal Attention,0.00,0.860000
++ BiLSTM,0.01,0.840000
++ Temporal Attn (Full Model),0.00,0.831100
